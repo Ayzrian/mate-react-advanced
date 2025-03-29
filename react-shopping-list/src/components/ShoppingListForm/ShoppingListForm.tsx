@@ -1,10 +1,17 @@
-import { useState } from "react"
+import { ChangeEvent, useState } from "react"
 
+export interface ShoppingListFormValues {
+    name: string;
+}
 
-export function ShoppingListForm({ onSubmit }) {
+interface ShoppingListFormProps {
+    onSubmit: (item: ShoppingListFormValues) => void
+}
+
+export function ShoppingListForm({ onSubmit }: ShoppingListFormProps) {
     const [name, setName] = useState("")
 
-    const handleChange = (event) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value)
     }
 

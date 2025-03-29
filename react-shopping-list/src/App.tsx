@@ -1,18 +1,16 @@
-import { useMemo, useState } from "react"
 import { Header } from "./components/Header/Header"
 import { ShoppingList } from "./components/ShoppingList/ShoppingList"
-import { ShoppingListForm } from "./components/ShoppingListForm/ShoppingListForm"
+import { ShoppingListForm, ShoppingListFormValues } from "./components/ShoppingListForm/ShoppingListForm"
 import { ShoppingListPanel } from "./components/ShoppingListPanel/ShoppingListPanel"
 import { useShoppingList } from "./hooks/useShoppingList"
+import { ShoppingItem } from "./types"
 
-
-const items = [
+const items: ShoppingItem[] = [
   {id: 1, name: "Tomato", quantity: 3},
   {id: 2, name: "Cucumber", quantity: 1, mustHave: true},
   {id: 3, name: "Sprite", quantity: 5, mustHave: true},
   {id: 4, name: "Mellon", quantity: 1}
 ]
-
 
 function App() {
   const {
@@ -24,11 +22,11 @@ function App() {
     setSortBy
   } = useShoppingList(items);
 
-  const handleSubmit = (item) => {
+  const handleSubmit = (item: ShoppingListFormValues) => {
     addItem(item);
   }
 
-  const handleItemDelete = (itemId) => {
+  const handleItemDelete = (itemId: number) => {
     deleteItem(itemId);
   }
 

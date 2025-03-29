@@ -1,5 +1,13 @@
-export function ShoppingListPanel({ mustHaveFilter, onMustHaveFilterChange, onSortByChange  }) {
-    const handleCheckBoxChange = (event) => {
+import { ChangeEvent } from "react";
+
+interface ShoppingListPanelProps {
+    mustHaveFilter: boolean;
+    onMustHaveFilterChange: (checked: boolean) => void;
+    onSortByChange: (fieldName: string) => void;
+}
+
+export function ShoppingListPanel({ mustHaveFilter, onMustHaveFilterChange, onSortByChange  }: ShoppingListPanelProps) {
+    const handleCheckBoxChange = (event: ChangeEvent<HTMLInputElement>) => {
         onMustHaveFilterChange(event.target.checked);
     }
 
@@ -9,7 +17,8 @@ export function ShoppingListPanel({ mustHaveFilter, onMustHaveFilterChange, onSo
              <input
                  type="checkbox"
                  className="toggle toggle-primary"
-                 value={mustHaveFilter} onChange={handleCheckBoxChange}
+                 checked={mustHaveFilter}
+                 onChange={handleCheckBoxChange}
              />
          </label>
 
