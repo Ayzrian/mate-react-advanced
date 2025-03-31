@@ -1,16 +1,18 @@
 import { useState, useMemo } from "react"
+import { ShoppingItem } from "../types";
+import { ShoppingListFormValues } from "../components/ShoppingListForm/ShoppingListForm";
 
-export function useShoppingList(initialList) {
+export function useShoppingList(initialList: ShoppingItem[]) {
     const [list, setList] = useState(initialList);
 
     const [mustHaveFilter, setMustHaveFilter] = useState(false);
     const [sortBy, setSortBy] = useState('');
 
-    const addItem = (item) => {
+    const addItem = (item: ShoppingListFormValues) => {
         setList((list) => [...list, { ...item, id: Math.floor(Math.random() * 100000) + 1, quantity: 1 }]);
     }
 
-    const deleteItem = (itemId) => {
+    const deleteItem = (itemId: number) => {
         const index = list.findIndex((item) => item.id === itemId);
 
         setList([...list.slice(0, index), ...list.slice(index + 1)]);

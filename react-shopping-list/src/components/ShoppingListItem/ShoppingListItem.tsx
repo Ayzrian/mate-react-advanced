@@ -1,7 +1,12 @@
 import { cva } from "class-variance-authority";
+import { ShoppingItem } from "../../types";
 
-export function ShoppingListItem({ item: { id, name, quantity = 1, mustHave }, onItemDelete}) {
+interface ShoppingListItemProps {
+    item: ShoppingItem;
+    onItemDelete: (itemId: number) => void
+}
 
+export function ShoppingListItem({ item: { id, name, quantity = 1, mustHave }, onItemDelete}: ShoppingListItemProps) {
     const itemClass = cva("flex justify-between items-center bg-base-100 p-3 rounded shadow-md", {
         variants: {
             mustHave: {
