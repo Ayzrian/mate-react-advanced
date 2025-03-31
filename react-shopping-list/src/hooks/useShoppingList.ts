@@ -9,7 +9,7 @@ export function useShoppingList(initialList: ShoppingItem[]) {
     const [sortBy, setSortBy] = useState('');
 
     const addItem = (item: ShoppingListFormValues) => {
-        setList((list) => [...list, { ...item, id: Math.floor(Math.random() * 100000) + 1, quantity: 1 }]);
+        setList((list) => [...list, { ...item, id: Math.floor(Math.random() * 100000) + 1 }]);
     }
 
     const deleteItem = (itemId: number) => {
