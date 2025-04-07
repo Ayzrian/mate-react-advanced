@@ -1,3 +1,4 @@
+import { Link, useParams } from "react-router";
 import { ShoppingList } from "../components/ShoppingList/ShoppingList";
 import { ShoppingListForm, ShoppingListFormValues } from "../components/ShoppingListForm/ShoppingListForm";
 import { ShoppingListPanel } from "../components/ShoppingListPanel/ShoppingListPanel";
@@ -28,9 +29,18 @@ export function ShoppingListPage() {
       const handleItemDelete = (itemId: number) => {
         deleteItem(itemId);
       }
+
+      const { id } = useParams();
     
       return (
         <>
+            <div className="breadcrumbs text-sm">
+              <ul>
+                <li><Link to="/shopping-lists">Shopping Lists</Link></li>
+                <li><Link to={`/shopping-lists/${id}`}>Shopping List #{id}</Link></li>
+              </ul>
+            </div>
+
             <ShoppingListForm onSubmit={handleSubmit} />
 
             <br/>
