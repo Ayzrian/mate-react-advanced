@@ -1,11 +1,17 @@
 import { cva } from "class-variance-authority";
-import { ChangeEvent, FormEvent, useState } from "react"
+import { useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
 
-export interface ShoppingListFormValues {
-    name: string;
-    quantity: number;
-    mustHave: boolean;
-}
+const schema = yup
+  .object({
+    name: yup.string().min(1).max(100).required(),
+    quantity: yup.number().min(1).integer().required(),
+    mustHave: yup.boolean().required()
+  })
+  .required()
+
+export type ShoppingListFormValues = yup.InferType<typeof schema>;
 
 interface ShoppingListFormProps {
     onSubmit: (item: ShoppingListFormValues) => void
@@ -20,51 +26,24 @@ const input = cva(["input"], {
 });
 
 export function ShoppingListForm({ onSubmit }: ShoppingListFormProps) {
-    const [name, setName] = useState("")
-    const [nameError, setNameError] = useState("")
-
-    const [quantity, setQuantity] = useState(1)
-    const [quantityError, setQuantityError] = useState("")
-
-    const [mustHave, setMustHave] = useState(false)
-
-    const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value)
-    }
-
-    const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setQuantity(event.target.valueAsNumber)
-    }
-
-    const handleMustHaveChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setMustHave(event.target.checked)
-    }
-
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-
-        let isValid = true;
-        setNameError("");
-        setQuantityError("");
-
-        if (name.length < 1 || name.length > 100) {
-            setNameError("Name length must have at least 1 character and be less than 100 characters");
-            isValid = false;
+    const {
+        register,
+        handleSubmit: handleFormSubmit,
+        formState: { errors },
+        reset
+      } = useForm({
+        resolver: yupResolver(schema),
+        defaultValues: {
+            name: "",
+            quantity: 1,
+            mustHave: false,
         }
+      })
 
-        if (quantity < 1) {
-            setQuantityError("Quantity can not be less than 1");
-            isValid = false;
-        }
+    const handleSubmit = (values: ShoppingListFormValues) => {
+        onSubmit({ ...values })
 
-        if (!isValid) {
-            return;
-        }
-
-        onSubmit({ name, quantity, mustHave })
-        setName("")
-        setQuantity(1)
-        setMustHave(false)
+        reset()
     }
 
     return (<div className="flex items-center justify-center gap-2">
@@ -73,20 +52,20 @@ export function ShoppingListForm({ onSubmit }: ShoppingListFormProps) {
                 <h2 className="card-title">
                     Add New Item
                 </h2>
-                <form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
-                    <input className={input({ error: nameError.length > 0 })} value={name} onChange={handleNameChange} type="text" placeholder="Input an item name"/>
+                <form className="flex flex-col space-y-2" onSubmit={handleFormSubmit(handleSubmit)}>
+                    <input className={input({ error: !!errors.name })} {...register("name")} type="text" placeholder="Input an item name"/>
                     {
-                        nameError && <p className="text-red-500">{nameError}</p>
+                        errors.name && <p className="text-red-500">{errors.name.message}</p>
                     }
 
-                    <input className={input({ error: quantityError.length > 0 })} value={quantity} onChange={handleQuantityChange} type="number"/>
+                    <input className={input({ error: !!errors.quantity  })} {...register("quantity")} type="number"/>
                     {
-                        quantityError && <p className="text-red-500">{quantityError}</p>
+                        errors.quantity && <p className="text-red-500">{errors.quantity.message}</p>
                     }
 
                     <label className="label cursor-pointer space-x-1">
                         <span className="label-text">Must Have:</span>
-                        <input className="checkbox" checked={mustHave} onChange={handleMustHaveChange} type="checkbox"/>
+                        <input className="checkbox" {...register("mustHave")} type="checkbox"/>
                     </label>
 
                     <button className="btn btn-primary" type="submit">
