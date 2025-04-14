@@ -18,6 +18,16 @@ export function useShoppingList(initialList: ShoppingItem[]) {
         setList([...list.slice(0, index), ...list.slice(index + 1)]);
     }
 
+    const updateItem = (itemId: number, update: ShoppingListFormValues) => {
+        setList((list) => list.map(item => {
+            if (item.id === itemId) {
+                return {...item, ...update};
+            }
+
+            return item;
+        }))
+    } 
+
     const resultingList = useMemo(() => {
         const results = mustHaveFilter ? list.filter((item) => item.mustHave) : list;
 
@@ -49,6 +59,7 @@ export function useShoppingList(initialList: ShoppingItem[]) {
         list: resultingList,
         addItem,
         deleteItem,
+        updateItem,
         mustHaveFilter,
         setMustHaveFilter,
         setSortBy

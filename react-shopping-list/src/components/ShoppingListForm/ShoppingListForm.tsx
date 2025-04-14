@@ -14,8 +14,10 @@ const schema = yup
 export type ShoppingListFormValues = yup.InferType<typeof schema>;
 
 interface ShoppingListFormProps {
+    defaultValues: ShoppingListFormValues
     onSubmit: (item: ShoppingListFormValues) => void
-}
+ }
+ 
 
 const input = cva(["input"], {
     variants: {
@@ -25,7 +27,7 @@ const input = cva(["input"], {
     }
 });
 
-export function ShoppingListForm({ onSubmit }: ShoppingListFormProps) {
+export function ShoppingListForm({ onSubmit, defaultValues }: ShoppingListFormProps) {
     const {
         register,
         handleSubmit: handleFormSubmit,
@@ -33,11 +35,7 @@ export function ShoppingListForm({ onSubmit }: ShoppingListFormProps) {
         reset
       } = useForm({
         resolver: yupResolver(schema),
-        defaultValues: {
-            name: "",
-            quantity: 1,
-            mustHave: false,
-        }
+        defaultValues
       })
 
     const handleSubmit = (values: ShoppingListFormValues) => {

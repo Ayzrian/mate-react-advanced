@@ -4,9 +4,10 @@ import { ShoppingListItem } from "../ShoppingListItem/ShoppingListItem";
 interface ShoppingListProps {
     list: ShoppingItem[];
     onItemDelete: (itemId: number) => void;
-}
+    onItemEdit: (itemId: number) => void;
+ }
 
-export function ShoppingList({ list, onItemDelete }: ShoppingListProps) {
+export function ShoppingList({ list, onItemDelete, onItemEdit }: ShoppingListProps) {
     if (list.length === 0) {
         return <div>
             Shopping List is Empty :(
@@ -15,9 +16,14 @@ export function ShoppingList({ list, onItemDelete }: ShoppingListProps) {
 
     return (
         <ul className="space-y-2">
-            {
-                list.map((item) => <ShoppingListItem key={item.id} item={item} onItemDelete={onItemDelete}/> )
-            }
+           {
+               list.map((item) => <ShoppingListItem
+                                       key={item.id}
+                                       item={item}
+                                       onItemDelete={onItemDelete}
+                                       onItemEdit={onItemEdit}/>
+               )
+           }
         </ul>
     )
 }
