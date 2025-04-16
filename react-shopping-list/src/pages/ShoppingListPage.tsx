@@ -49,21 +49,17 @@ export function ShoppingListPage() {
 
   return (
     <>
-        <div className="breadcrumbs text-sm">
-            <ul>
-                <li><Link to="/shopping-lists">Shopping Lists</Link></li>
-                <li><Link to={`/shopping-lists/${id}`}>Shopping List #{id}</Link></li>
-            </ul>
+        <div className="flex">
+            <div className="breadcrumbs text-sm flex-1">
+                <ul>
+                    <li><Link to="/shopping-lists">Shopping Lists</Link></li>
+                    <li><Link to={`/shopping-lists/${id}`}>Shopping List #{id}</Link></li>
+                </ul>
+            </div>
+
+            <Link to={`/shopping-lists/${id}/create`} className="btn btn-small btn-primary">Add</Link>
         </div>
 
-        {
-            !editing &&
-            <ShoppingListForm onSubmit={handleSubmit} defaultValues={{
-                name: "",
-                quantity: 1,
-                mustHave: false,
-            }}/>
-        }
 
         {
             editing &&

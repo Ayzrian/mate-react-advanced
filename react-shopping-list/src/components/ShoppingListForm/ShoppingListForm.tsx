@@ -67,7 +67,7 @@ export function ShoppingListForm({ onSubmit, defaultValues }: ShoppingListFormPr
                     </label>
 
                     <button className="btn btn-primary" type="submit">
-                        Create
+                        Submit
                     </button>
                 </form>
             </div>
