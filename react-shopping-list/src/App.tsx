@@ -1,84 +1,21 @@
-import { useState } from "react"
-import { Header } from "./components/Header/Header"
-import { ShoppingList } from "./components/ShoppingList/ShoppingList"
-import { ShoppingListForm, ShoppingListFormValues } from "./components/ShoppingListForm/ShoppingListForm"
-import { ShoppingListPanel } from "./components/ShoppingListPanel/ShoppingListPanel"
-import { useShoppingList } from "./hooks/useShoppingList"
-import { ShoppingItem } from "./types"
-
-const items: ShoppingItem[] = [
-  {id: 1, name: "Tomato", quantity: 3, mustHave: false},
-  {id: 2, name: "Cucumber", quantity: 1, mustHave: true},
-  {id: 3, name: "Sprite", quantity: 5, mustHave: true},
-  {id: 4, name: "Mellon", quantity: 1, mustHave: false}
-]
+import { BrowserRouter, Route, Routes } from "react-router"
+import { ShoppingListPage } from "./pages/ShoppingListPage"
+import { ShoppingListsPage } from "./pages/ShoppingListsPage"
+import { AppLayout } from "./pages/AppLayout"
 
 function App() {
-  const {
-    list,
-    addItem,
-    deleteItem,
-    updateItem,
-    mustHaveFilter,
-    setMustHaveFilter,
-    setSortBy
-  } = useShoppingList(items);
-  const [editing, setEditing] = useState(false);
-  const [editingId, setEditingId] = useState(0);
-  const editingItem = list.find(item => item.id === editingId) as ShoppingItem;
+  return <BrowserRouter>
+    <Routes>
+      <Route path="/shopping-lists" element={<AppLayout />}>
+        <Route index element={<ShoppingListsPage />}/>
+        <Route path=":id" element={<ShoppingListPage />}/>
+      </Route>
 
-  const handleSubmit = (item: ShoppingListFormValues) => {
-    if (editing) {
-      updateItem(editingId, item);
-      setEditing(false);
-    } else {
-      addItem(item);
-    }
-  } 
-
-  const handleItemDelete = (itemId: number) => {
-    deleteItem(itemId);
-  }
-
-  const handleItemEdit = (itemId: number) => {
-    setEditingId(itemId);
-    setEditing(true);
-  } 
-
-  return (
-    <>
-      <Header>
-        <em>Shoppping List App</em>
-      </Header>
-
-      <div className="container mx-auto p-2">
-        {
-          !editing &&
-          <ShoppingListForm onSubmit={handleSubmit} defaultValues={{
-              name: "",
-              quantity: 1,
-              mustHave: false,
-          }}/>
-        }
-
-        {
-          editing &&
-          <ShoppingListForm key={editingId} onSubmit={handleSubmit} defaultValues={editingItem}/>
-        }
-
-        <br/>
-        <ShoppingListPanel
-          mustHaveFilter={mustHaveFilter}
-          onMustHaveFilterChange={setMustHaveFilter}
-          onSortByChange={setSortBy}
-        />
-
-        <div className="divider"/>
-
-        <ShoppingList list={list} onItemDelete={handleItemDelete} onItemEdit={handleItemEdit}/>
-      </div>
-    </>
-  )
+      <Route element={<AppLayout/>}>
+        <Route path="*" element={<p>Page not found.</p>}/>
+      </Route>
+    </Routes>
+  </BrowserRouter>
 }
 
 export default App
