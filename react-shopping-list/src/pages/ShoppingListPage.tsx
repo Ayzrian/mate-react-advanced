@@ -52,12 +52,12 @@ export function ShoppingListPage() {
         <div className="flex">
             <div className="breadcrumbs text-sm flex-1">
                 <ul>
-                    <li><Link to="/shopping-lists">Shopping Lists</Link></li>
-                    <li><Link to={`/shopping-lists/${id}`}>Shopping List #{id}</Link></li>
+                    <li><Link to="../">Shopping Lists</Link></li>
+                    <li><Link to={`../${id}`}>Shopping List #{id}</Link></li>
                 </ul>
             </div>
 
-            <Link to={`/shopping-lists/${id}/create`} className="btn btn-small btn-primary">Add</Link>
+            <Link to={`../${id}/create`} className="btn btn-small btn-primary">Add</Link>
         </div>
 
 
