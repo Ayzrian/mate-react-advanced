@@ -1,9 +1,24 @@
+import classNames from "classnames";
 import { ReactElement } from "react"
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 
 interface HeaderProps {
   children: ReactElement;
 }
+
+const navItems: {
+  to: string;
+  label: string;
+}[] = [
+  {
+    to: "/shopping-lists",
+    label: "Shopping Lists"
+  },
+  {
+    to: "/",
+    label: "Home"
+  }
+]
 
 export function Header({ children }: HeaderProps) {
     return (
@@ -14,9 +29,11 @@ export function Header({ children }: HeaderProps) {
           </h1>
 
           <ul className="menu menu-horizontal px-1">
-            <li>
-              <Link to="/shopping-lists">Shopping Lists</Link>
-            </li>
+            {
+              navItems.map(({ to, label }) => (<li key={to}>
+                <NavLink className={({ isActive }) => classNames(isActive && "underline")} to={to}>{label}</NavLink>
+              </li>))
+            }
           </ul>
         </div>
       </div>

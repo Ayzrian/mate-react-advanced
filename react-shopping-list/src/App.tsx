@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router"
 import { ShoppingListPage } from "./pages/ShoppingListPage"
 import { ShoppingListsPage } from "./pages/ShoppingListsPage"
 import { AppLayout } from "./pages/AppLayout"
+import { HomePage } from "./pages/HomePage"
 
 function App() {
   return <BrowserRouter>
@@ -12,6 +13,8 @@ function App() {
       </Route>
 
       <Route element={<AppLayout/>}>
+        <Route path="/" element={<HomePage />}/>
+
         <Route path="*" element={<p>Page not found.</p>}/>
       </Route>
     </Routes>

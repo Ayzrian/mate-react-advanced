@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { Header } from "../components/Header/Header"
 import { ShoppingList } from "../components/ShoppingList/ShoppingList"
 import { ShoppingListForm, ShoppingListFormValues } from "../components/ShoppingListForm/ShoppingListForm"
 import { ShoppingListPanel } from "../components/ShoppingListPanel/ShoppingListPanel"
