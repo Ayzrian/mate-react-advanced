@@ -4,6 +4,7 @@ import { ShoppingListForm, ShoppingListFormValues } from "../components/Shopping
 import { ShoppingListPanel } from "../components/ShoppingListPanel/ShoppingListPanel"
 import { useShoppingList } from "../hooks/useShoppingList"
 import { ShoppingItem } from "../types"
+import { useParams, Link } from "react-router"
 
 const items: ShoppingItem[] = [
   {id: 1, name: "Tomato", quantity: 3, mustHave: false},
@@ -42,10 +43,19 @@ export function ShoppingListPage() {
   const handleItemEdit = (itemId: number) => {
     setEditingId(itemId);
     setEditing(true);
-  } 
+  }
+
+  const { id } = useParams();
 
   return (
     <>
+        <div className="breadcrumbs text-sm">
+            <ul>
+                <li><Link to="/shopping-lists">Shopping Lists</Link></li>
+                <li><Link to={`/shopping-lists/${id}`}>Shopping List #{id}</Link></li>
+            </ul>
+        </div>
+
         {
             !editing &&
             <ShoppingListForm onSubmit={handleSubmit} defaultValues={{
