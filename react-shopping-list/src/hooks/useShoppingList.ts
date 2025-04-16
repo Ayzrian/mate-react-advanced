@@ -1,12 +1,29 @@
 import { useState, useMemo } from "react"
 import { ShoppingItem } from "../types";
 import { ShoppingListFormValues } from "../components/ShoppingListForm/ShoppingListForm";
+import { useSearchParams } from "react-router";
 
 export function useShoppingList(initialList: ShoppingItem[]) {
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const updateSearchParams = (name: string, value: boolean | string) => {
+        const newSearchParams = new URLSearchParams(searchParams);
+ 
+ 
+        if (value) {
+            newSearchParams.set(name, String(value));
+        } else {
+            newSearchParams.delete(name);
+        }
+ 
+ 
+        setSearchParams(newSearchParams);
+    } 
+
     const [list, setList] = useState(initialList);
 
-    const [mustHaveFilter, setMustHaveFilter] = useState(false);
-    const [sortBy, setSortBy] = useState('');
+    const [mustHaveFilter, setMustHaveFilter] = useState(searchParams.get('mustHave') ? Boolean(searchParams.get('mustHave')): false);
+    const [sortBy, setSortBy] = useState(searchParams.get('sortBy') ? searchParams.get('sortBy'): '');
 
     const addItem = (item: ShoppingListFormValues) => {
         setList((list) => [...list, { ...item, id: Math.floor(Math.random() * 100000) + 1 }]);
@@ -61,7 +78,13 @@ export function useShoppingList(initialList: ShoppingItem[]) {
         deleteItem,
         updateItem,
         mustHaveFilter,
-        setMustHaveFilter,
-        setSortBy
+        setMustHaveFilter: (value: boolean) => {
+            setMustHaveFilter(value);
+            updateSearchParams('mustHave', value);
+        },
+        setSortBy: (value: string) => {
+            setSortBy(value);
+            updateSearchParams('sortBy', value);
+        }
     }
 }
