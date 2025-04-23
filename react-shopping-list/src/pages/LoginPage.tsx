@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { cva } from "class-variance-authority";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
@@ -36,9 +36,16 @@ export function LoginPage() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const onSubmit = (data: LoginFormData) => {
-    login(data.username, data.password);
-    navigate('/shopping-lists');
+  const [error, setError] = useState(false);
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      setError(false);
+      await login(data.username, data.password);
+      navigate('/shopping-lists');
+    } catch (e) {
+      console.error(e);
+      setError(true);
+    }
   };
 
   return (
@@ -46,6 +53,10 @@ export function LoginPage() {
       <div className="card w-full max-w-sm shadow-2xl bg-base-100">
         <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
           <h2 className="text-2xl font-bold text-center">Login</h2>
+
+          {error && (<span className="text-red-500">
+            Username or password is incorrect.
+          </span>)}
 
           <div className="form-control">
             <label className="label">
