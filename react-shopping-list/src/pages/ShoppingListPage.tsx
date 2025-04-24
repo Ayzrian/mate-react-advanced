@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { ShoppingList } from "../components/ShoppingList/ShoppingList"
-import { ShoppingListForm, ShoppingListFormValues } from "../components/ShoppingListForm/ShoppingListForm"
+import { ShoppingListItemForm, ShoppingListItemFormValues } from "../components/ShoppingListItemForm/ShoppingListItemForm"
 import { ShoppingListPanel } from "../components/ShoppingListPanel/ShoppingListPanel"
 import { useShoppingList } from "../hooks/useShoppingList"
 import { ShoppingItem } from "../types"
@@ -27,7 +27,7 @@ export function ShoppingListPage() {
   const [editingId, setEditingId] = useState(0);
   const editingItem = list.find(item => item.id === editingId) as ShoppingItem;
 
-  const handleSubmit = (item: ShoppingListFormValues) => {
+  const handleSubmit = (item: ShoppingListItemFormValues) => {
     if (editing) {
       updateItem(editingId, item);
       setEditing(false);
@@ -63,7 +63,7 @@ export function ShoppingListPage() {
 
         {
             editing &&
-            <ShoppingListForm key={editingId} onSubmit={handleSubmit} defaultValues={editingItem}/>
+            <ShoppingListItemForm key={editingId} onSubmit={handleSubmit} defaultValues={editingItem}/>
         }
 
         <br/>

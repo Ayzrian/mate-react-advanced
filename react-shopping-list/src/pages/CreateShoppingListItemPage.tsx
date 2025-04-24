@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { ShoppingListForm } from "../components/ShoppingListForm/ShoppingListForm";
+import { ShoppingListItemForm } from "../components/ShoppingListItemForm/ShoppingListItemForm";
  
 export function CreateShoppingListItemPage() {
     const navigate = useNavigate();
@@ -11,7 +11,7 @@ export function CreateShoppingListItemPage() {
     }
 
     return <div>        
-        <ShoppingListForm onSubmit={handleSubmit} defaultValues={{
+        <ShoppingListItemForm onSubmit={handleSubmit} defaultValues={{
             name: "",
             quantity: 1,
             mustHave: false,

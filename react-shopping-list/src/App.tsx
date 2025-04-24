@@ -7,6 +7,7 @@ import { CreateShoppingListItemPage } from "./pages/CreateShoppingListItemPage"
 import { LoginPage } from "./pages/LoginPage"
 import { AuthProvider } from "./context/AuthContext"
 import { ProtectedRoute } from "./pages/ProtectedRoute"
+import { CreateShoppingListPage } from "./pages/CreateShoppingListPage"
 
 function App() {
   return <AuthProvider>
@@ -15,6 +16,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/shopping-lists" element={<AppLayout />}>
             <Route index element={<ShoppingListsPage />}/>
+            <Route path="create" element={<CreateShoppingListPage />} />
+
             <Route path=":id">
               <Route index element={<ShoppingListPage />}/>
               <Route path="create" element={<CreateShoppingListItemPage />}/>

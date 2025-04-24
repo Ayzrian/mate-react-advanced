@@ -6,14 +6,16 @@ import * as yup from "yup"
 const schema = yup
   .object({
     name: yup.string().min(1).max(100).required(),
+    quantity: yup.number().min(1).integer().required(),
+    mustHave: yup.boolean().required()
   })
   .required()
 
-export type ShoppingListFormValues = yup.InferType<typeof schema>;
+export type ShoppingListItemFormValues = yup.InferType<typeof schema>;
 
-interface ShoppingListFormProps {
-    defaultValues: ShoppingListFormValues
-    onSubmit: (item: ShoppingListFormValues) => void
+interface ShoppingListItemFormProps {
+    defaultValues: ShoppingListItemFormValues
+    onSubmit: (item: ShoppingListItemFormValues) => void
  }
  
 
@@ -25,7 +27,7 @@ const input = cva(["input"], {
     }
 });
 
-export function ShoppingListForm({ onSubmit, defaultValues }: ShoppingListFormProps) {
+export function ShoppingListItemForm({ onSubmit, defaultValues }: ShoppingListItemFormProps) {
     const {
         register,
         handleSubmit: handleFormSubmit,
@@ -36,7 +38,7 @@ export function ShoppingListForm({ onSubmit, defaultValues }: ShoppingListFormPr
         defaultValues
       })
 
-    const handleSubmit = (values: ShoppingListFormValues) => {
+    const handleSubmit = (values: ShoppingListItemFormValues) => {
         onSubmit({ ...values })
 
         reset()
@@ -46,13 +48,23 @@ export function ShoppingListForm({ onSubmit, defaultValues }: ShoppingListFormPr
         <div className="card shadow-sm w-[300px]">
             <div className="card-body">
                 <h2 className="card-title">
-                    Add New Shopping List
+                    Add New Item
                 </h2>
                 <form className="flex flex-col space-y-2" onSubmit={handleFormSubmit(handleSubmit)}>
-                    <input className={input({ error: !!errors.name })} {...register("name")} type="text" placeholder="Input shopping list name"/>
+                    <input className={input({ error: !!errors.name })} {...register("name")} type="text" placeholder="Input an item name"/>
                     {
                         errors.name && <p className="text-red-500">{errors.name.message}</p>
                     }
+
+                    <input className={input({ error: !!errors.quantity  })} {...register("quantity")} type="number"/>
+                    {
+                        errors.quantity && <p className="text-red-500">{errors.quantity.message}</p>
+                    }
+
+                    <label className="label cursor-pointer space-x-1">
+                        <span className="label-text">Must Have:</span>
+                        <input className="checkbox" {...register("mustHave")} type="checkbox"/>
+                    </label>
 
                     <button className="btn btn-primary" type="submit">
                         Submit

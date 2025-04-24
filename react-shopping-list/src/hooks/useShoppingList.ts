@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react"
 import { ShoppingItem } from "../types";
-import { ShoppingListFormValues } from "../components/ShoppingListForm/ShoppingListForm";
+import { ShoppingListItemFormValues } from "../components/ShoppingListItemForm/ShoppingListItemForm";
 import { useSearchParams } from "react-router";
 
 export function useShoppingList(initialList: ShoppingItem[]) {
@@ -25,7 +25,7 @@ export function useShoppingList(initialList: ShoppingItem[]) {
     const [mustHaveFilter, setMustHaveFilter] = useState(searchParams.get('mustHave') ? Boolean(searchParams.get('mustHave')): false);
     const [sortBy, setSortBy] = useState(searchParams.get('sortBy') ? searchParams.get('sortBy'): '');
 
-    const addItem = (item: ShoppingListFormValues) => {
+    const addItem = (item: ShoppingListItemFormValues) => {
         setList((list) => [...list, { ...item, id: Math.floor(Math.random() * 100000) + 1 }]);
     }
 
@@ -35,7 +35,7 @@ export function useShoppingList(initialList: ShoppingItem[]) {
         setList([...list.slice(0, index), ...list.slice(index + 1)]);
     }
 
-    const updateItem = (itemId: number, update: ShoppingListFormValues) => {
+    const updateItem = (itemId: number, update: ShoppingListItemFormValues) => {
         setList((list) => list.map(item => {
             if (item.id === itemId) {
                 return {...item, ...update};
