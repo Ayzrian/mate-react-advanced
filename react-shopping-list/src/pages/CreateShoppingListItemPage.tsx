@@ -1,11 +1,14 @@
-import { useNavigate } from "react-router";
-import { ShoppingListItemForm } from "../components/ShoppingListItemForm/ShoppingListItemForm";
+import { useNavigate, useParams } from "react-router";
+import { ShoppingListItemForm, ShoppingListItemFormValues } from "../components/ShoppingListItemForm/ShoppingListItemForm";
+import { useShoppingListItemService } from "../services/ShoppingListItemService";
  
 export function CreateShoppingListItemPage() {
+    const { id } = useParams();
+    const { createShoppingListItem } = useShoppingListItemService();
     const navigate = useNavigate();
 
-    const handleSubmit = () => {
-        // TODO: Integrate server to create item on server
+    const handleSubmit = async (values: ShoppingListItemFormValues) => {
+        await createShoppingListItem(Number(id), values);
 
         navigate(-1);
     }

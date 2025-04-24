@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { ShoppingItem } from "../types";
 import { ShoppingListItemFormValues } from "../components/ShoppingListItemForm/ShoppingListItemForm";
 import { useSearchParams } from "react-router";
+import { useShoppingListItemService } from "../services/ShoppingListItemService";
 
-export function useShoppingList(initialList: ShoppingItem[]) {
+export function useShoppingList(listId: number) {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const updateSearchParams = (name: string, value: boolean | string) => {
@@ -20,22 +21,33 @@ export function useShoppingList(initialList: ShoppingItem[]) {
         setSearchParams(newSearchParams);
     } 
 
-    const [list, setList] = useState(initialList);
+    const [list, setList] = useState<ShoppingItem[]>([]);
 
     const [mustHaveFilter, setMustHaveFilter] = useState(searchParams.get('mustHave') ? Boolean(searchParams.get('mustHave')): false);
     const [sortBy, setSortBy] = useState(searchParams.get('sortBy') ? searchParams.get('sortBy'): '');
 
-    const addItem = (item: ShoppingListItemFormValues) => {
-        setList((list) => [...list, { ...item, id: Math.floor(Math.random() * 100000) + 1 }]);
-    }
+    const {
+        getShoppingListItems,
+        deleteShoppingListItem,
+        updateShoppingListItem,
+    } = useShoppingListItemService();
 
-    const deleteItem = (itemId: number) => {
+    useEffect(() => {
+        getShoppingListItems(listId)
+            .then(results => setList(results));
+    }, []);
+
+    const deleteItem = async (itemId: number) => {
+        await deleteShoppingListItem(listId, itemId);
+
         const index = list.findIndex((item) => item.id === itemId);
 
         setList([...list.slice(0, index), ...list.slice(index + 1)]);
     }
 
-    const updateItem = (itemId: number, update: ShoppingListItemFormValues) => {
+    const updateItem = async (itemId: number, update: ShoppingListItemFormValues) => {
+        await updateShoppingListItem(listId, itemId, update);
+
         setList((list) => list.map(item => {
             if (item.id === itemId) {
                 return {...item, ...update};
@@ -74,7 +86,6 @@ export function useShoppingList(initialList: ShoppingItem[]) {
 
     return {
         list: resultingList,
-        addItem,
         deleteItem,
         updateItem,
         mustHaveFilter,

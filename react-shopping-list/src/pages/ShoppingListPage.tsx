@@ -6,46 +6,37 @@ import { useShoppingList } from "../hooks/useShoppingList"
 import { ShoppingItem } from "../types"
 import { useParams, Link } from "react-router"
 
-const items: ShoppingItem[] = [
-  {id: 1, name: "Tomato", quantity: 3, mustHave: false},
-  {id: 2, name: "Cucumber", quantity: 1, mustHave: true},
-  {id: 3, name: "Sprite", quantity: 5, mustHave: true},
-  {id: 4, name: "Mellon", quantity: 1, mustHave: false}
-]
 
 export function ShoppingListPage() {
+  const { id } = useParams();
+
   const {
     list,
-    addItem,
     deleteItem,
     updateItem,
     mustHaveFilter,
     setMustHaveFilter,
     setSortBy
-  } = useShoppingList(items);
+  } = useShoppingList(Number(id));
   const [editing, setEditing] = useState(false);
   const [editingId, setEditingId] = useState(0);
   const editingItem = list.find(item => item.id === editingId) as ShoppingItem;
 
-  const handleSubmit = (item: ShoppingListItemFormValues) => {
+  const handleSubmit = async (item: ShoppingListItemFormValues) => {
     if (editing) {
-      updateItem(editingId, item);
+      await updateItem(editingId, item);
       setEditing(false);
-    } else {
-      addItem(item);
     }
   } 
 
-  const handleItemDelete = (itemId: number) => {
-    deleteItem(itemId);
+  const handleItemDelete = async (itemId: number) => {
+    await deleteItem(itemId);
   }
 
   const handleItemEdit = (itemId: number) => {
     setEditingId(itemId);
     setEditing(true);
   }
-
-  const { id } = useParams();
 
   return (
     <>
