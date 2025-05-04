@@ -2,6 +2,7 @@ import { cva } from "class-variance-authority";
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
+import { useState } from "react";
 
 const schema = yup
   .object({
@@ -15,7 +16,7 @@ export type ShoppingListItemFormValues = yup.InferType<typeof schema>;
 
 interface ShoppingListItemFormProps {
     defaultValues: ShoppingListItemFormValues
-    onSubmit: (item: ShoppingListItemFormValues) => void
+    onSubmit: (item: ShoppingListItemFormValues) => Promise<void>
  }
  
 
@@ -31,17 +32,23 @@ export function ShoppingListItemForm({ onSubmit, defaultValues }: ShoppingListIt
     const {
         register,
         handleSubmit: handleFormSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         reset
       } = useForm({
         resolver: yupResolver(schema),
         defaultValues
-      })
+    })
 
-    const handleSubmit = (values: ShoppingListItemFormValues) => {
-        onSubmit({ ...values })
+    const [errorMessage, setErrorMessage] = useState('');
+    const handleSubmit = async (values: ShoppingListItemFormValues) => {
+        try {
+            setErrorMessage('');
+            await onSubmit({ ...values })
 
-        reset()
+            reset()
+        } catch(e) {
+            setErrorMessage('Failed to create item. Try again later!');
+        }
     }
 
     return (<div className="flex items-center justify-center gap-2">
@@ -50,24 +57,35 @@ export function ShoppingListItemForm({ onSubmit, defaultValues }: ShoppingListIt
                 <h2 className="card-title">
                     Add New Item
                 </h2>
+
+                {
+                    errorMessage && <div className="alert alert-error">{errorMessage}</div>
+                }
+
                 <form className="flex flex-col space-y-2" onSubmit={handleFormSubmit(handleSubmit)}>
-                    <input className={input({ error: !!errors.name })} {...register("name")} type="text" placeholder="Input an item name"/>
+                    <input disabled={isSubmitting} className={input({ error: !!errors.name })} {...register("name")} type="text" placeholder="Input an item name"/>
                     {
                         errors.name && <p className="text-red-500">{errors.name.message}</p>
                     }
 
-                    <input className={input({ error: !!errors.quantity  })} {...register("quantity")} type="number"/>
+                    <input disabled={isSubmitting} className={input({ error: !!errors.quantity  })} {...register("quantity")} type="number"/>
                     {
                         errors.quantity && <p className="text-red-500">{errors.quantity.message}</p>
                     }
 
                     <label className="label cursor-pointer space-x-1">
                         <span className="label-text">Must Have:</span>
-                        <input className="checkbox" {...register("mustHave")} type="checkbox"/>
+                        <input disabled={isSubmitting} className="checkbox" {...register("mustHave")} type="checkbox"/>
                     </label>
 
-                    <button className="btn btn-primary" type="submit">
-                        Submit
+                    <button disabled={isSubmitting} className="btn btn-primary" type="submit">
+                        {
+                            !isSubmitting && 'Submit'
+                        }
+
+                        {
+                            isSubmitting && <span className="loading loading-spinner"/>
+                        }
                     </button>
                 </form>
             </div>

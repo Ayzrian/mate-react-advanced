@@ -38,11 +38,17 @@ export function useShoppingList(listId: number) {
     }, []);
 
     const deleteItem = async (itemId: number) => {
-        await deleteShoppingListItem(listId, itemId);
+        try {
+            const index = list.findIndex((item) => item.id === itemId);
 
-        const index = list.findIndex((item) => item.id === itemId);
+            setList([...list.slice(0, index), ...list.slice(index + 1)]);
+    
+            await deleteShoppingListItem(listId, itemId);
+        } catch (e) {
+            setList(list);
 
-        setList([...list.slice(0, index), ...list.slice(index + 1)]);
+            throw e;
+        }
     }
 
     const updateItem = async (itemId: number, update: ShoppingListItemFormValues) => {

@@ -18,6 +18,9 @@ export function ShoppingListPage() {
     setMustHaveFilter,
     setSortBy
   } = useShoppingList(Number(id));
+
+  const [errorMessage, setErrorMessage] = useState('');
+
   const [editing, setEditing] = useState(false);
   const [editingId, setEditingId] = useState(0);
   const editingItem = list.find(item => item.id === editingId) as ShoppingItem;
@@ -30,7 +33,12 @@ export function ShoppingListPage() {
   } 
 
   const handleItemDelete = async (itemId: number) => {
-    await deleteItem(itemId);
+    try {
+      setErrorMessage('');
+      await deleteItem(itemId);
+    } catch (e) {
+      setErrorMessage('Failed to delete item. Try again later!')
+    }
   }
 
   const handleItemEdit = (itemId: number) => {
@@ -65,6 +73,10 @@ export function ShoppingListPage() {
         />
 
         <div className="divider"/>
+
+        {
+          errorMessage && <div className="alert alert-error">{errorMessage}</div>
+        }
 
         <ShoppingList list={list} onItemDelete={handleItemDelete} onItemEdit={handleItemEdit}/>
     </>
