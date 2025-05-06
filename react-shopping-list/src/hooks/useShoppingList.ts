@@ -3,6 +3,7 @@ import { ShoppingItem } from "../types";
 import { ShoppingListItemFormValues } from "../components/ShoppingListItemForm/ShoppingListItemForm";
 import { useSearchParams } from "react-router";
 import { useShoppingListItemService } from "../services/ShoppingListItemService";
+import debounce from "debounce";
 
 export function useShoppingList(listId: number) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -32,10 +33,16 @@ export function useShoppingList(listId: number) {
         updateShoppingListItem,
     } = useShoppingListItemService();
 
+    const getList = useMemo(() => {
+        return debounce((listId) => {
+            getShoppingListItems(listId)
+                .then(results => setList(results));
+        }, 200);
+    }, [getShoppingListItems, setList]);
+
     useEffect(() => {
-        getShoppingListItems(listId)
-            .then(results => setList(results));
-    }, []);
+        getList(listId);
+    }, [mustHaveFilter]);
 
     const deleteItem = useCallback(async (itemId: number) => {
         try {
