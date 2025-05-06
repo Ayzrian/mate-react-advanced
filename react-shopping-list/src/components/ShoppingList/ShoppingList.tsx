@@ -1,3 +1,4 @@
+import React from "react";
 import { ShoppingItem } from "../../types";
 import { ShoppingListItem } from "../ShoppingListItem/ShoppingListItem";
 
@@ -7,7 +8,7 @@ interface ShoppingListProps {
     onItemEdit: (itemId: number) => void;
  }
 
-export function ShoppingList({ list, onItemDelete, onItemEdit }: ShoppingListProps) {
+export const ShoppingList = React.memo(({ list, onItemDelete, onItemEdit }: ShoppingListProps) => {
     if (list.length === 0) {
         return <div>
             Shopping List is Empty :(
@@ -26,4 +27,4 @@ export function ShoppingList({ list, onItemDelete, onItemEdit }: ShoppingListPro
            }
         </ul>
     )
-}
+});

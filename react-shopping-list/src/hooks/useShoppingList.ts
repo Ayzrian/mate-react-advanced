@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, useCallback } from "react"
 import { ShoppingItem } from "../types";
 import { ShoppingListItemFormValues } from "../components/ShoppingListItemForm/ShoppingListItemForm";
 import { useSearchParams } from "react-router";
@@ -37,7 +37,7 @@ export function useShoppingList(listId: number) {
             .then(results => setList(results));
     }, []);
 
-    const deleteItem = async (itemId: number) => {
+    const deleteItem = useCallback(async (itemId: number) => {
         try {
             const index = list.findIndex((item) => item.id === itemId);
 
@@ -49,7 +49,7 @@ export function useShoppingList(listId: number) {
 
             throw e;
         }
-    }
+    }, [setList, list, deleteShoppingListItem])
 
     const updateItem = async (itemId: number, update: ShoppingListItemFormValues) => {
         await updateShoppingListItem(listId, itemId, update);

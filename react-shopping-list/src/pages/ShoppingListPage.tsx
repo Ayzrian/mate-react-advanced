@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { ShoppingList } from "../components/ShoppingList/ShoppingList"
 import { ShoppingListItemForm, ShoppingListItemFormValues } from "../components/ShoppingListItemForm/ShoppingListItemForm"
 import { ShoppingListPanel } from "../components/ShoppingListPanel/ShoppingListPanel"
@@ -32,19 +32,19 @@ export function ShoppingListPage() {
     }
   } 
 
-  const handleItemDelete = async (itemId: number) => {
+  const handleItemDelete = useCallback(async (itemId: number) => {
     try {
       setErrorMessage('');
       await deleteItem(itemId);
     } catch (e) {
       setErrorMessage('Failed to delete item. Try again later!')
     }
-  }
+  }, [setErrorMessage, deleteItem])
 
-  const handleItemEdit = (itemId: number) => {
+  const handleItemEdit = useCallback((itemId: number) => {
     setEditingId(itemId);
     setEditing(true);
-  }
+  }, [setEditing, setEditingId])
 
   return (
     <>
