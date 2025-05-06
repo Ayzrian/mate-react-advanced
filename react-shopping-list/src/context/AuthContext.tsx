@@ -19,11 +19,13 @@ export interface AuthProviderProps {
     children: ReactElement;
 }
 
-const savedToken = localStorage.getItem('token') || '';
-
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [loggedIn, setLoggedIn] = useState(!!savedToken);
-    const [token, setToken] = useState(savedToken);
+    const [loggedIn, setLoggedIn] = useState(() => {
+        return !!localStorage.getItem('token');
+    });
+    const [token, setToken] = useState(() => {
+        return localStorage.getItem('token') || '';
+    });
 
     const login = async (userName: string, password: string) => {
         const { token } = await authenticate(userName, password);
