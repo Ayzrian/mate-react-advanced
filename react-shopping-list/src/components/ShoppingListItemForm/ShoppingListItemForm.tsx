@@ -51,8 +51,8 @@ export function ShoppingListItemForm({ onSubmit, defaultValues }: ShoppingListIt
         }
     }
 
-    return (<div className="flex items-center justify-center gap-2">
-        <div className="card shadow-sm w-[300px]">
+    return (<div onClick={(event) => event.stopPropagation()} className="flex items-center justify-center gap-2">
+        <div className="card bg-white shadow-sm w-[300px]">
             <div className="card-body">
                 <h2 className="card-title">
                     Add New Item

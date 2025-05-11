@@ -5,6 +5,7 @@ import { ShoppingListPanel } from "../components/ShoppingListPanel/ShoppingListP
 import { useShoppingList } from "../hooks/useShoppingList"
 import { ShoppingItem } from "../types"
 import { useParams, Link } from "react-router"
+import { createPortal } from "react-dom"
 
 
 export function ShoppingListPage() {
@@ -61,8 +62,12 @@ export function ShoppingListPage() {
 
 
         {
-            editing &&
-            <ShoppingListItemForm key={editingId} onSubmit={handleSubmit} defaultValues={editingItem}/>
+            editing && createPortal(
+            <div onClick={() => setEditing(false)} className="absolute w-screen h-screen bg-gray-600/70 top-0 left-0 flex flex-col items-center justify-center">
+              <ShoppingListItemForm key={editingId} onSubmit={handleSubmit} defaultValues={editingItem}/>
+            </div>,
+            document.body
+          )
         }
 
         <br/>
