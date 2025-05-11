@@ -6,6 +6,7 @@ import { useShoppingList } from "../hooks/useShoppingList"
 import { ShoppingItem } from "../types"
 import { useParams, Link } from "react-router"
 import { createPortal } from "react-dom"
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react"
 
 
 export function ShoppingListPage() {
@@ -60,15 +61,15 @@ export function ShoppingListPage() {
             <Link to={`../${id}/create`} className="btn btn-small btn-primary">Add</Link>
         </div>
 
-
-        {
-            editing && createPortal(
-            <div onClick={() => setEditing(false)} className="absolute w-screen h-screen bg-gray-600/70 top-0 left-0 flex flex-col items-center justify-center">
-              <ShoppingListItemForm key={editingId} onSubmit={handleSubmit} defaultValues={editingItem}/>
-            </div>,
-            document.body
-          )
-        }
+        <Dialog open={editing} onClose={() => setEditing(false)} className="relative z-50">
+            <DialogBackdrop className="fixed inset-0 bg-black/30" />
+          
+            <div className="fixed w-screen inset-0 h-screen flex flex-col items-center justify-center">
+              <DialogPanel>
+                <ShoppingListItemForm key={editingId} onSubmit={handleSubmit} defaultValues={editingItem}/>
+              </DialogPanel>
+            </div>
+        </Dialog>
 
         <br/>
         <ShoppingListPanel
